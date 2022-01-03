@@ -1,0 +1,228 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Apex Charts {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}	
+
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-content">
+            <!-- [ breadcrumb ] start -->
+            <div class="page-header">
+                <div class="container">
+                    <form action="{{ url_for('apextutorialdropdown') }}" method="POST">
+                    <div class="row text-center">
+                      <div class="form-group col-4">
+                            <select  id="dropdown1" name="id" class="form-control w-600">
+                                <option>Value</option>
+                                <option>10</option>
+                                <option>41</option>
+                                <option>51</option>
+                                <option>49</option>
+                                <option>62</option>
+                                <option>69</option>
+                                <option>91</option>
+                                <option>148</option>
+                            </select>
+                      </div>
+                      <div class="col-4">
+                            <input type="submit" class="form-control w-600">
+                      </div>
+                      <div class="col-4">
+                        <button type="button" class="btn btn-default">Right</button>
+                      </div>
+                    </div>
+                    </form>
+                  </div>   
+                       
+            </div>
+            <div>
+
+               
+            </div>
+            <!-- [ breadcrumb ] end -->
+            <!-- [ Main Content ] start -->
+            <div class="row">
+                <!-- [ variant-chart ] start -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Basic line chart</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="line-chart-1"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Realtime Chart</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="line-chart-2"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- [ variant-chart ] end -->
+
+            </div>
+            <!-- [ Main Content ] end -->
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE <script src="/static/assets/js/plugins/apexcharts.min.js"></script>
+    <script src="/static/assets/js/pages/apex-chart-tutorial.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js"></script> DONT NEED NO ERROR.. 
+-->
+{% block javascripts %}
+
+    
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
+    <script type="text/javascript">
+        var dataObject = {{ dataObject | safe}};
+
+        $(document).ready(function() {
+            setTimeout(function() {
+                $(function() {
+                    var options = {
+                        chart: {
+                            height: 350,
+                            type: 'line',
+                            zoom: {
+                                enabled: false
+                            }
+                        },
+                        dataLabels: {
+                            enabled: false,
+                            width: 2,
+                        },
+                        stroke: {
+                            curve: 'straight',
+                        },
+                        colors: ["#4099ff"],
+                        fill: {
+                            type: "gradient",
+                            gradient: {
+                                shade: 'light'
+                            },
+                        },
+                        series: [{
+                            name: "Desktops",
+                            data: dataObject["values"]
+                        }],
+                        title: {
+                            text: 'Product Trends by Month',
+                            align: 'left'
+                        },
+                        grid: {
+                            row: {
+                                colors: ['#f3f6ff', 'transparent'], // takes an array which will be repeated on columns
+                                opacity: 0.5
+                            },
+                        },
+                        xaxis: {
+                            categories: dataObject["months"],
+                        }
+                    }
+                    var chart = new ApexCharts(
+                        document.querySelector("#line-chart-1"),
+                        options
+                    );
+                    chart.render();
+                });
+                $(function() {
+                    var options = {
+                        series: [{
+                        name: 'Inflation',
+                        data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
+                    }],
+                        chart: {
+                        height: 350,
+                        type: 'bar',
+                    },
+                    plotOptions: {
+                        bar: {
+                        borderRadius: 10,
+                        dataLabels: {
+                            position: 'top', // top, center, bottom
+                        },
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val) {
+                        return val + "%";
+                        },
+                        offsetY: -20,
+                        style: {
+                        fontSize: '12px',
+                        colors: ["#304758"]
+                        }
+                    },
+                    
+                    xaxis: {
+                        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                        position: 'top',
+                        axisBorder: {
+                        show: false
+                        },
+                        axisTicks: {
+                        show: false
+                        },
+                        crosshairs: {
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                            colorFrom: '#D8E3F0',
+                            colorTo: '#BED1E6',
+                            stops: [0, 100],
+                            opacityFrom: 0.4,
+                            opacityTo: 0.5,
+                            }
+                        }
+                        },
+                        tooltip: {
+                        enabled: true,
+                        }
+                    },
+                    yaxis: {
+                        axisBorder: {
+                        show: false
+                        },
+                        axisTicks: {
+                        show: false,
+                        },
+                        labels: {
+                        show: false,
+                        formatter: function (val) {
+                            return val + "%";
+                        }
+                        }
+                    
+                    },
+                    title: {
+                        text: 'Monthly Inflation in Argentina, 2002',
+                        floating: true,
+                        offsetY: 330,
+                        align: 'center',
+                        style: {
+                        color: '#444'
+                        }
+                    }
+                    };
+            
+                    var chart = new ApexCharts(document.querySelector("#line-chart-2"), options);
+                    chart.render();
+                    
+                })})})
+    </script>
+
+{% endblock javascripts %}
